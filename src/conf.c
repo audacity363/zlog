@@ -204,11 +204,11 @@ static int zlog_conf_build_without_file(zlog_conf_t * a_conf)
 	}
 
 	/* add default rule */
-	if (zc_arraylist_add(a_conf->rules, default_rule)) {
+	/*if (zc_arraylist_add(a_conf->rules, default_rule)) {
 		zlog_rule_del(default_rule);
 		zc_error("zc_arraylist_add fail");
 		return -1;
-	}
+	}*/
 
 	return 0;
 }
@@ -456,12 +456,14 @@ static int zlog_conf_parse_line(zlog_conf_t * a_conf, char *line, int *section)
 		}
 		break;
 	case 2:
+        printf("Add to levels: [%s]\n", line);
 		if (zlog_level_list_set(a_conf->levels, line)) {
 			zc_error("zlog_level_list_set fail");
 			if (a_conf->strict_init) return -1;
 		}
 		break;
 	case 3:
+        printf("Adding format: [%s]\n", line);
 		a_format = zlog_format_new(line, &(a_conf->time_cache_count));
 		if (!a_format) {
 			zc_error("zlog_format_new fail [%s]", line);
@@ -475,6 +477,7 @@ static int zlog_conf_parse_line(zlog_conf_t * a_conf, char *line, int *section)
 		}
 		break;
 	case 4:
+        printf("Add rule: [%s]\n", line);
 		a_rule = zlog_rule_new(line,
 			a_conf->levels,
 			a_conf->default_format,

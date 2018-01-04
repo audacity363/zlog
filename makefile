@@ -17,6 +17,11 @@ doc:
 test:
 	cd test && $(MAKE)
 
+capi_test:
+	gcc -g -c -I./src/ ./capi_tests/test.c -o ./capi_tests/bin/test.o
+	gcc -g -I./src/ ./capi_tests/main.c -o ./capi_tests/main -L./src/ -lzlog \
+		-lpthread ./capi_tests/bin/*.o
+
 TAGS:
 	find . -type f -name "*.[ch]" | xargs etags -
 

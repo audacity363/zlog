@@ -77,7 +77,8 @@ ifeq ($(uname_S),AIX)
   STLIB_MAKE_CMD=OBJECT_MODE=64 ar rcs $(STLIBNAME) $(DYLIB_MAJOR_NAME)
 endif
 
-all: $(DYLIBNAME) $(BINS)
+#all: $(DYLIBNAME) $(BINS)
+all:  $(BINS)
 
 # Deps (use make dep to generate this)
 buf.o: buf.c zc_defs.h zc_profile.h zc_arraylist.h zc_hashtable.h \
@@ -128,21 +129,21 @@ zlog.o: zlog.c fmacros.h conf.h zc_defs.h zc_profile.h zc_arraylist.h \
  mdc.h rotater.h category_table.h category.h record_table.h \
  record.h rule.h
 
-$(DYLIBNAME): $(OBJ)
-	$(DYLIB_MAKE_CMD) $(OBJ) $(REAL_LDFLAGS)
-	# for use in test folder - linux and requirement for aix runtime
-	# resolving
-	cp -f $(DYLIBNAME) $(DYLIB_MAJOR_NAME)
-	cp -f $(DYLIBNAME) $(DYLIB_MINOR_NAME)
+#$(DYLIBNAME): $(OBJ)
+#	$(DYLIB_MAKE_CMD) $(OBJ) $(REAL_LDFLAGS)
+#	# for use in test folder - linux and requirement for aix runtime
+#	# resolving
+#	cp -f $(DYLIBNAME) $(DYLIB_MAJOR_NAME)
+#	cp -f $(DYLIBNAME) $(DYLIB_MINOR_NAME)
 
 $(STLIBNAME): $(OBJ)
 	$(STLIB_MAKE_CMD) $(OBJ)
 
-dynamic: $(DYLIBNAME)
+#dynamic: $(DYLIBNAME)
 static: $(STLIBNAME)
 
 # Binaries:
-zlog-chk-conf: zlog-chk-conf.o $(STLIBNAME) $(DYLIBNAME)
+zlog-chk-conf: zlog-chk-conf.o $(STLIBNAME) #$(DYLIBNAME)
 	$(CC) -o $@ zlog-chk-conf.o -L. -lzlog $(REAL_LDFLAGS)
 
 .c.o:
