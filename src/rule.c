@@ -967,13 +967,14 @@ void zlog_rule_del(zlog_rule_t * a_rule)
 	return;
 }
 
-zlog_rule_t *zlog_rule_new_test(char *line,
+zlog_rule_t *zlog_rule_new_capi(
 		zc_arraylist_t *levels,
 		zlog_format_t * default_format,
 		zc_arraylist_t * formats,
 		unsigned int file_perms,
 		size_t fsync_period,
-		int * time_cache_count)
+		int * time_cache_count,
+        new_rule_setting_t settings)
 {
 	int rc = 0;
 	int nscan = 0;
@@ -995,7 +996,6 @@ zlog_rule_t *zlog_rule_new_test(char *line,
 	char *q;
 	size_t len;
 
-	zc_assert(line, NULL);
 	zc_assert(default_format, NULL);
 	zc_assert(formats, NULL);
 
@@ -1008,7 +1008,7 @@ zlog_rule_t *zlog_rule_new_test(char *line,
 	a_rule->file_perms = file_perms;
 	a_rule->fsync_period = fsync_period;
 	
-	strcpy(category, "my_cat");
+	strcpy(category, settings.category);
 	
 	/* check and set category */
 	for (p = category; *p != '\0'; p++) {
@@ -1021,7 +1021,7 @@ zlog_rule_t *zlog_rule_new_test(char *line,
 	/* as one line can't be longer than MAXLEN_CFG_LINE, same as category */
 	strcpy(a_rule->category, category);
 
-	strcpy(level, "=DEBUG");
+	strcpy(level, settings.level);
 
 	/* check and set level */
 	switch (level[0]) {
@@ -1075,17 +1075,8 @@ zlog_rule_t *zlog_rule_new_test(char *line,
 
 	a_rule->format = default_format;
 
-	/* action               ["%H/log/aa.log", 20MB * 12 ; MyTemplate]
-	 * output               ["%H/log/aa.log", 20MB * 12]
-	 * format               [MyTemplate]
-	 */
-
-	/* output               [-"%E(HOME)/log/aa.log" , 20MB*12]  [>syslog , LOG_LOCAL0 ]
-	 * file_path            [-"%E(HOME)/log/aa.log" ]           [>syslog ]
-	 * *file_limit          [20MB * 12 ~ "aa.#i.log" ]          [LOG_LOCAL0]
-	 */
-	strcpy(file_path, "-/tmp/aa.log");
-	strcpy(file_limit, "10MB *2");
+	strcpy(file_path, settings.file_path);
+	strcpy(file_limit, settings.file_limit);
 
 	p = NULL;
 	switch (file_path[0]) {

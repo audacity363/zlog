@@ -70,6 +70,14 @@ struct zlog_rule_s {
 	zlog_record_fn record_func;
 };
 
+typedef struct new_rule_setting_s {
+    char category[MAXLEN_CFG_LINE + 1];
+    char level[MAXLEN_CFG_LINE + 1];
+    char file_path[MAXLEN_CFG_LINE + 1];
+    char file_limit[MAXLEN_CFG_LINE + 1];
+} new_rule_setting_t;
+
+
 zlog_rule_t *zlog_rule_new(char * line,
 		zc_arraylist_t * levels,
 		zlog_format_t * default_format,

@@ -3,7 +3,7 @@
 
 #include "zlog.h"
 
-void addRule();
+int addRule();
 
 int main() {
     int rc = 0;
@@ -14,7 +14,9 @@ int main() {
        return(-1);
     }
 
-    addRule();
+    if(addRule() != 0) {
+        return(-1);
+    }
     
     if((c = zlog_get_category("my_cat")) == NULL) {
         fprintf(stderr, "Could not get cat\n");
